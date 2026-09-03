@@ -145,6 +145,29 @@
   .obj-list .num { font-family: 'IBM Plex Mono', monospace; color: var(--orange-deep); font-weight: 600; }
   .obj-list strong { color: var(--ink); }
 
+  /* ---- hallazgo → decisión técnica ---- */
+  .decision-list { list-style: none; padding: 0; margin: clamp(18px, 2.6vw, 28px) 0 0; max-width: 980px; }
+  .decision-row {
+    display: grid; grid-template-columns: 1fr 26px 1fr; gap: 12px; align-items: center;
+    padding: 9px 0; border-bottom: 1px solid var(--rule);
+  }
+  .decision-row:first-child { border-top: 1px solid var(--rule); }
+  .decision-row .see, .decision-row .do {
+    font-size: clamp(12.5px, 1.05vw, 14.5px); line-height: 1.42; color: var(--ink-soft);
+  }
+  .decision-row .see strong, .decision-row .do strong { color: var(--ink); }
+  .decision-row .tag {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; display: block; margin-bottom: 3px;
+  }
+  .decision-row .see .tag { color: var(--slate); }
+  .decision-row .do .tag { color: var(--orange-deep); font-weight: 700; }
+  .decision-row .arrow { text-align: center; color: var(--orange); font-size: 16px; font-weight: 700; }
+  @media (max-width: 780px) {
+    .decision-row { grid-template-columns: 1fr; gap: 4px; }
+    .decision-row .arrow { display: none; }
+  }
+
   /* ---- pipeline CRISP-DM ---- */
   .pipeline { display: flex; align-items: stretch; gap: 0; margin-top: clamp(28px, 4vw, 44px); flex-wrap: nowrap; width: 100%; }
   .phase { flex: 1; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 14px; position: relative; }
@@ -340,7 +363,10 @@
     <h2>40.336 pacientes, un archivo por persona</h2>
     <div class="two-col">
       <div class="col-narrow">
-        <p class="body-copy" style="margin-top:0"><p>Cada paciente es un archivo <code>.psv</code> con <strong>una fila por hora de estancia</strong>. Ni el paciente ni el hospital están en el archivo — se rescatan del nombre y de la carpeta.</p></p>
+        <div class="body-copy" style="margin-top:0">
+          <p>Cada paciente es un archivo <code>.psv</code> con <strong>una fila por hora de estancia</strong>. Ni el paciente ni el hospital están en el archivo — se rescatan del nombre y de la carpeta al cargar.</p>
+          <p>Esa forma de organizar los datos ya fija una decisión técnica: como las horas de un mismo paciente están correlacionadas entre sí, <strong>toda partición train/test del proyecto se hace por paciente</strong>, nunca por fila — mezclar horas de un mismo paciente entre los dos conjuntos sería fuga de información.</p>
+        </div>
         <div class="tool-chips">
           <span class="chip">8 signos vitales</span>
           <span class="chip">26 laboratorios</span>
@@ -402,7 +428,10 @@
     <h2>El reto real: casi todo está vacío</h2>
     <div class="two-col" style="grid-template-columns: 0.95fr 1.05fr; align-items:center;">
       <div class="col-narrow">
-        <p class="body-copy" style="margin-top:0">Los signos vitales rondan 10–35% de nulos. <strong>24 de los 26 laboratorios superan el 90%.</strong> No es un defecto: un monitor mide continuo, un laboratorio se pide solo cuando el médico lo ordena.</p>
+        <div class="body-copy" style="margin-top:0">
+          <p>Los signos vitales rondan 10–35% de nulos. <strong>24 de los 26 laboratorios superan el 90%.</strong> No es un defecto: un monitor mide continuo, un laboratorio se pide solo cuando el médico lo ordena.</p>
+          <p>Como el origen del vacío es distinto en cada familia, <strong>no hay una sola regla de imputación</strong> que sirva para ambas — la política correcta hay que medirla, no asumirla (siguiente hallazgo, y notebook 04).</p>
+        </div>
       </div>
       <div class="figure-frame">
         <img src="../reports/figures/01_nulos_por_variable.png" alt="Porcentaje de nulos por variable" style="max-height:58vh">
@@ -438,7 +467,7 @@
           <div class="stat"><div class="stat-value">8,80%</div><div class="stat-label">prevalencia de sepsis por paciente — Hospital A</div></div>
           <div class="stat"><div class="stat-value ink">5,71%</div><div class="stat-label">prevalencia de sepsis por paciente — Hospital B</div></div>
         </div>
-        <p class="body-copy">46,8% de los pacientes de A no tienen tipo de unidad registrado, frente a 30,5% en B. Dos sistemas clínicos y administrativos distintos — no dos muestras del mismo proceso.</p>
+        <p class="body-copy">46,8% de los pacientes de A no tienen tipo de unidad registrado, frente a 30,5% en B. Dos sistemas clínicos y administrativos distintos — no dos muestras del mismo proceso, lo que obliga a validar cruzando hospitales antes de confiar en un solo número de desempeño.</p>
       </div>
       <div class="figure-frame">
         <img src="../reports/figures/01_brechas_hospital_a_vs_b.png" alt="Brechas entre hospital A y B">
@@ -457,7 +486,41 @@
     </div>
   </section>
 
-  <!-- 14 · IMPUTACIÓN -->
+  <!-- 14 · OBJETIVOS TÉCNICOS -->
+  <section class="slide">
+    <p class="eyebrow"><span class="n">5</span> Datos y variables</p>
+    <h2>Objetivos técnicos que se derivan de los datos</h2>
+    <p class="lede">Cada hallazgo de esta sección no se queda en curiosidad: fija una restricción de diseño concreta para todo lo que viene después.</p>
+    <ol class="decision-list">
+      <li class="decision-row">
+        <div class="see"><span class="tag">Vemos</span>Solo <strong>1,80%</strong> de las horas son positivas.</div>
+        <div class="arrow">→</div>
+        <div class="do"><span class="tag">Decidimos</span>Optimizar el <strong>utility score</strong> y ponderar las clases en el entrenamiento — nunca accuracy.</div>
+      </li>
+      <li class="decision-row">
+        <div class="see"><span class="tag">Vemos</span>Los laboratorios no se piden al azar: <strong>2,3× más</strong> en pacientes que terminan sépticos.</div>
+        <div class="arrow">→</div>
+        <div class="do"><span class="tag">Decidimos</span>Convertir "no medido" en <strong>variable predictiva</strong> (indicador + antigüedad), nunca en un hueco a rellenar.</div>
+      </li>
+      <li class="decision-row">
+        <div class="see"><span class="tag">Vemos</span>A y B difieren en prevalencia, unidades registradas y variables medidas.</div>
+        <div class="arrow">→</div>
+        <div class="do"><span class="tag">Decidimos</span>Validar <strong>cruzando hospitales</strong> y comparar modelo mixto vs. especializado antes de elegir cómo desplegar.</div>
+      </li>
+      <li class="decision-row">
+        <div class="see"><span class="tag">Vemos</span>El deterioro es sutil y heterogéneo entre pacientes — ningún umbral fijo lo captura.</div>
+        <div class="arrow">→</div>
+        <div class="do"><span class="tag">Decidimos</span>Construir <strong>features de dinámica</strong> (tendencia, ventanas 6h/24h, basal propio), no mirar el valor crudo de una sola hora.</div>
+      </li>
+      <li class="decision-row">
+        <div class="see"><span class="tag">Vemos</span>Cada paciente aporta una <strong>secuencia</strong> de horas correlacionadas entre sí, no observaciones independientes.</div>
+        <div class="arrow">→</div>
+        <div class="do"><span class="tag">Decidimos</span>Particionar <strong>80/20 por paciente</strong>, nunca por fila — ninguna hora del mismo paciente cruza a train y test.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 15 · IMPUTACIÓN -->
   <section class="slide">
     <p class="eyebrow"><span class="n">6</span> Modelo y solución</p>
     <h2>La imputación se midió, no se asumió</h2>
@@ -474,21 +537,34 @@
     </div>
   </section>
 
-  <!-- 15 · FEATURE ENGINEERING -->
+  <!-- 16 · FEATURE ENGINEERING -->
   <section class="slide">
     <p class="eyebrow"><span class="n">6</span> Modelo y solución</p>
     <h2>De 40 a 209 variables</h2>
-    <div class="stat-row" style="margin-top:16px">
-      <div class="stat"><div class="stat-value">4</div><div class="stat-label">familias: valor arrastrado, indicadores, dinámica en ventana, desviación del basal</div></div>
-      <div class="stat"><div class="stat-value ink">209</div><div class="stat-label">columnas finales, cada una con una hipótesis clínica detrás</div></div>
+    <p class="lede" style="margin-top:8px">Un valor crudo por hora no alcanza: no dice si viene subiendo, hace cuánto no se mide, ni cómo se compara con el propio basal del paciente. Cada familia nueva ataca exactamente eso, y nace de un hallazgo ya mostrado — no de la intuición.</p>
+    <div class="two-col" style="margin-top:14px; align-items:flex-start;">
+      <table class="cmp-table" style="margin-top:0">
+        <tbody>
+          <tr><td style="font-weight:700; color:var(--ink); white-space:nowrap;">Valor arrastrado</td><td>último valor + antigüedad → gana 2–7× en MAE (nb 04)</td></tr>
+          <tr><td style="font-weight:700; color:var(--ink); white-space:nowrap;">Indicadores</td><td>¿se midió esta hora? → la petición misma ya es señal (nb 02)</td></tr>
+          <tr><td style="font-weight:700; color:var(--ink); white-space:nowrap;">Dinámica y basal</td><td>tendencia en ventanas 6h/24h → la trayectoria individual pesa más que el promedio (nb 03)</td></tr>
+          <tr><td style="font-weight:700; color:var(--ink); white-space:nowrap;">Scores clínicos</td><td>SIRS, qSOFA, índice de shock → cocientes que un árbol difícilmente redescubre solo</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <div class="figure-frame"><img src="../reports/figures/05_correlacion_features_vs_crudas.png" alt="Correlación de features construidas vs crudas" style="max-height:32vh"></div>
+        <div class="stat-row" style="margin-top:14px">
+          <div class="stat"><div class="stat-value ink">209</div><div class="stat-label">columnas finales · partición 80/20 por paciente</div></div>
+        </div>
+      </div>
     </div>
-    <div class="img-only" style="margin-top:16px; justify-content:flex-end"><div class="figure-frame"><img src="../reports/figures/05_correlacion_features_vs_crudas.png" alt="Correlación de features construidas vs crudas" style="max-height:41vh"></div></div>
   </section>
 
-  <!-- 16 · SEIS MODELOS -->
+  <!-- 17 · SEIS MODELOS -->
   <section class="slide">
     <p class="eyebrow"><span class="n">6</span> Modelo y solución</p>
     <h2>Seis modelos, mismas reglas</h2>
+    <p class="body-copy" style="margin:8px 0 0; max-width:80ch;"><strong>Mismo tratamiento del desbalance en los cinco modelos tabulares</strong> — <code>class_weight</code> / <code>scale_pos_weight</code>, nunca SMOTE: no tiene sentido clínico inventar series de tiempo de un paciente que no existe. Se suma un <strong>GRU</strong> secuencial para probar si ver el orden real de las horas aporta algo que las features de ventana no capturan ya.</p>
     <table class="cmp-table">
       <thead><tr><th>Modelo</th><th class="mono">AUROC</th><th class="mono">AUPRC</th><th class="mono">Lift</th></tr></thead>
       <tbody>
@@ -503,7 +579,7 @@
     <div class="insight"><p><strong>CatBoost</strong> gana en las dos métricas a la vez — evidencia de que encuentra algo real, no un empate estadístico.</p></div>
   </section>
 
-  <!-- 17 · UMBRAL -->
+  <!-- 18 · UMBRAL -->
   <section class="slide">
     <p class="eyebrow"><span class="n">6</span> Modelo y solución</p>
     <h2>El umbral: una decisión de negocio</h2>
@@ -517,7 +593,7 @@
     </div>
   </section>
 
-  <!-- 18 · RESULTADO CAMPEÓN -->
+  <!-- 19 · RESULTADO CAMPEÓN -->
   <section class="slide">
     <p class="eyebrow"><span class="n">7</span> Interpretación de resultados</p>
     <h2>El resultado del campeón</h2>
@@ -529,7 +605,7 @@
     <div class="insight"><p>45 horas no es un número abstracto: es <strong>casi dos días</strong> de margen de reacción para un equipo clínico, en un problema donde cada hora de retraso cuesta.</p></div>
   </section>
 
-  <!-- 19 · EL PRECIO -->
+  <!-- 20 · EL PRECIO -->
   <section class="slide">
     <p class="eyebrow"><span class="n">7</span> Interpretación de resultados</p>
     <h2>El precio real de esa detección</h2>
@@ -546,7 +622,7 @@
     </div>
   </section>
 
-  <!-- 20 · CONTRA EL MUNDO -->
+  <!-- 21 · CONTRA EL MUNDO -->
   <section class="slide">
     <p class="eyebrow"><span class="n">7</span> Interpretación de resultados</p>
     <h2>Nuestro resultado contra el mundo</h2>
@@ -563,7 +639,7 @@
     </div>
   </section>
 
-  <!-- 21 · SHAP -->
+  <!-- 22 · SHAP -->
   <section class="slide">
     <p class="eyebrow"><span class="n">7</span> Interpretación de resultados</p>
     <h2>¿En qué se fija el modelo?</h2>
@@ -580,7 +656,7 @@
     </div>
   </section>
 
-  <!-- 22 · TECHO BAJO -->
+  <!-- 23 · TECHO BAJO -->
   <section class="slide">
     <p class="eyebrow"><span class="n">7</span> Interpretación de resultados</p>
     <h2>Por qué el techo de este problema es bajo</h2>
@@ -597,7 +673,7 @@
     </div>
   </section>
 
-  <!-- 23 · PUENTE DEMO -->
+  <!-- 24 · PUENTE DEMO -->
   <section class="slide bridge">
     <p class="kicker">Demostración en vivo</p>
     <h2>Vamos a verlo funcionar</h2>
@@ -609,7 +685,7 @@
     <div class="bridge-url">streamlit run app/Inicio.py</div>
   </section>
 
-  <!-- 24 · CONCLUSIONES Y DECISIONES -->
+  <!-- 25 · CONCLUSIONES Y DECISIONES -->
   <section class="slide">
     <p class="eyebrow"><span class="n">8</span> Conclusiones y decisiones</p>
     <h2>Qué aprendimos y qué recomendamos</h2>
@@ -625,7 +701,7 @@
     </div>
   </section>
 
-  <!-- 25 · CIERRE -->
+  <!-- 26 · CIERRE -->
   <section class="slide closing">
     <p class="big-line">45 horas de anticipación no son un modelo perfecto —<br>son <span class="accent">tiempo real de reacción</span> que hoy no existe en la práctica clínica estándar.</p>
     <p class="thanks">Gracias</p>
