@@ -40,20 +40,22 @@
     display: none;
     position: absolute; inset: 0;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     padding: clamp(36px, 5vw, 88px) clamp(48px, 8vw, 120px);
     background: var(--ground);
     overflow: hidden;
   }
   .slide.active { display: flex; }
+  .slide.center-v { justify-content: center; }
 
   .eyebrow {
-    position: absolute; top: clamp(28px, 3.5vw, 48px); left: clamp(48px, 8vw, 120px);
     font-family: 'IBM Plex Mono', monospace;
     font-size: clamp(11px, 1.1vw, 13px);
     letter-spacing: 0.15em; text-transform: uppercase;
     color: var(--orange-deep);
     display: flex; align-items: center; gap: 10px;
+    margin-bottom: clamp(16px, 2.4vw, 26px);
+    flex: none;
   }
   .eyebrow .n {
     background: var(--orange); color: #fff; border-radius: 3px;
@@ -104,7 +106,8 @@
     background: var(--paper); border: 1px solid var(--rule); border-radius: 6px;
     padding: 14px; box-shadow: 0 8px 28px -14px rgba(42,36,29,0.28);
   }
-  .figure-frame img { display: block; width: 100%; height: auto; max-height: 44vh; object-fit: contain; border-radius: 2px; }
+  .figure-frame img { display: block; width: 100%; height: auto; max-height: 42vh; object-fit: contain; border-radius: 2px; }
+  .img-only .figure-frame img { max-height: 40vh; }
   .figure-cap {
     font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted);
     margin-top: 10px; text-align: center;
@@ -116,11 +119,11 @@
   .col-narrow { max-width: 48ch; }
 
   .img-only { margin-top: clamp(20px, 3.4vw, 40px); display: flex; justify-content: center; align-items: flex-start; }
-  .img-only .figure-frame { max-width: min(78vw, 820px); }
-  .img-only.wide .figure-frame { max-width: min(88vw, 980px); }
+  .img-only .figure-frame { max-width: min(84vw, 920px); }
+  .img-only.wide .figure-frame { max-width: min(92vw, 1080px); }
 
   .img-duo { display: flex; gap: 24px; margin-top: 28px; justify-content: center; }
-  .img-duo .figure-frame { flex: 1; max-width: 440px; }
+  .img-duo .figure-frame { flex: 1; max-width: 520px; }
 
   /* ---- highlight / insight box ---- */
   .insight {
@@ -186,7 +189,7 @@
   .cover .meta dd { margin: 4px 0 0; font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 16px; color: var(--ink); }
 
   /* ---- bridge / demo ---- */
-  .bridge { align-items: center; text-align: center; }
+  .bridge { align-items: center; text-align: center; justify-content: center; }
   .bridge .kicker { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange-deep); font-size: 14px; }
   .bridge h2 { font-size: clamp(34px, 5vw, 64px); max-width: none; margin-top: 14px; }
   .bridge-steps { display: flex; gap: 28px; margin-top: 44px; flex-wrap: wrap; justify-content: center; }
@@ -253,7 +256,7 @@
     <h1>Predicción temprana de sepsis en <span style="color:var(--orange-deep)">UCI</span></h1>
     <p class="subt">Un modelo que aprende a reconocer, hora a hora, cuándo un paciente de cuidados intensivos empieza a encaminarse hacia la sepsis — antes de que el deterioro sea evidente.</p>
     <dl class="meta-row">
-      <div class="meta"><dt>Equipo</dt><dd>Daniel Forero · Cristian Castañeda</dd></div>
+      <div class="meta"><dt>Equipo</dt><dd>Andrés Sánchez · Cristian Castañeda</dd></div>
       <div class="meta"><dt>Profesor</dt><dd>Jesús Antonio Villarraga P.</dd></div>
       <div class="meta"><dt>Repositorio</dt><dd>github.com/andresfsanchez74/prediccion-temprana-sepsis</dd></div>
     </dl>
@@ -397,12 +400,12 @@
   <section class="slide">
     <p class="eyebrow"><span class="n">5</span> Datos y variables</p>
     <h2>El reto real: casi todo está vacío</h2>
-    <div class="two-col">
+    <div class="two-col" style="grid-template-columns: 0.95fr 1.05fr; align-items:center;">
       <div class="col-narrow">
         <p class="body-copy" style="margin-top:0">Los signos vitales rondan 10–35% de nulos. <strong>24 de los 26 laboratorios superan el 90%.</strong> No es un defecto: un monitor mide continuo, un laboratorio se pide solo cuando el médico lo ordena.</p>
       </div>
       <div class="figure-frame">
-        <img src="../reports/figures/01_nulos_por_variable.png" alt="Porcentaje de nulos por variable">
+        <img src="../reports/figures/01_nulos_por_variable.png" alt="Porcentaje de nulos por variable" style="max-height:58vh">
       </div>
     </div>
   </section>
@@ -411,16 +414,16 @@
   <section class="slide">
     <p class="eyebrow"><span class="n">5</span> Datos y variables</p>
     <h2>La ausencia de un dato es información</h2>
-    <div class="two-col">
+    <div class="two-col" style="grid-template-columns: 0.72fr 1.5fr; align-items:center; gap:32px;">
       <div class="figure-frame">
-        <img src="../reports/figures/02_razon_medicion_labs_septico_vs_control.png" alt="Razón de medición de labs septico vs control">
+        <img src="../reports/figures/02_razon_medicion_labs_septico_vs_control.png" alt="Razón de medición de labs septico vs control" style="max-height:50vh">
       </div>
-      <div class="col-narrow">
-        <div class="stat-row" style="margin-top:0">
-          <div class="stat"><div class="stat-value">2,31×</div><div class="stat-label">más se mide Lactato en pacientes que terminan sépticos</div></div>
-          <div class="stat"><div class="stat-value">2,30×</div><div class="stat-label">más se mide FiO₂ en esos mismos pacientes</div></div>
+      <div style="display:flex; gap:16px; align-items:center; flex-wrap:nowrap;">
+        <div class="stat-row" style="margin-top:0; flex:0 0 auto; gap:18px;">
+          <div class="stat" style="min-width:118px"><div class="stat-value">2,31×</div><div class="stat-label" style="max-width:15ch">más se mide Lactato en sépticos</div></div>
+          <div class="stat" style="min-width:118px"><div class="stat-value">2,30×</div><div class="stat-label" style="max-width:15ch">más se mide FiO₂ en esos pacientes</div></div>
         </div>
-        <div class="insight"><p>La sospecha del médico está en los datos <strong>antes</strong> que el diagnóstico. Por eso "no medido" se convierte en variable predictiva, no en un hueco que rellenar.</p></div>
+        <div class="insight" style="margin-top:0; flex:1 1 180px; padding:12px 16px;"><p style="font-size:14px">La sospecha del médico está en los datos <strong>antes</strong> que el diagnóstico. "No medido" se vuelve variable predictiva, no un hueco que rellenar.</p></div>
       </div>
     </div>
   </section>
@@ -475,11 +478,11 @@
   <section class="slide">
     <p class="eyebrow"><span class="n">6</span> Modelo y solución</p>
     <h2>De 40 a 209 variables</h2>
-    <div class="stat-row">
+    <div class="stat-row" style="margin-top:16px">
       <div class="stat"><div class="stat-value">4</div><div class="stat-label">familias: valor arrastrado, indicadores, dinámica en ventana, desviación del basal</div></div>
       <div class="stat"><div class="stat-value ink">209</div><div class="stat-label">columnas finales, cada una con una hipótesis clínica detrás</div></div>
     </div>
-    <div class="img-only"><div class="figure-frame"><img src="../reports/figures/05_correlacion_features_vs_crudas.png" alt="Correlación de features construidas vs crudas"></div></div>
+    <div class="img-only" style="margin-top:16px; justify-content:flex-end"><div class="figure-frame"><img src="../reports/figures/05_correlacion_features_vs_crudas.png" alt="Correlación de features construidas vs crudas" style="max-height:41vh"></div></div>
   </section>
 
   <!-- 16 · SEIS MODELOS -->
@@ -581,15 +584,15 @@
   <section class="slide">
     <p class="eyebrow"><span class="n">7</span> Interpretación de resultados</p>
     <h2>Por qué el techo de este problema es bajo</h2>
-    <div class="two-col">
+    <div class="two-col" style="margin-top:16px">
       <div class="col-narrow">
         <p class="body-copy" style="margin-top:0">La etiqueta depende de un score de 6 sistemas de órganos (SOFA), y a este dataset le faltan 2 por completo. Ninguna variable disponible separa bien por sí sola.</p>
       </div>
       <div class="figure-frame">
-        <img src="../reports/figures/08_solapamiento_variables_criticas.png" alt="Solapamiento entre variables críticas">
+        <img src="../reports/figures/08_solapamiento_variables_criticas.png" alt="Solapamiento entre variables críticas" style="max-height:32vh">
       </div>
     </div>
-    <div class="stat-row">
+    <div class="stat-row" style="margin-top:16px">
       <div class="stat"><div class="stat-value">79–92<span class="unit">%</span></div><div class="stat-label">de solapamiento entre sépticos y no sépticos, incluso en las variables más influyentes</div></div>
     </div>
   </section>
