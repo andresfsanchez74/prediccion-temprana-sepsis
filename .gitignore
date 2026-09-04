@@ -11,6 +11,10 @@ models/*.pkl
 models/*.joblib
 models/*.pt
 !models/.gitkeep
+# Excepción: el modelo campeón sí se versiona (~16 MB) para que el dashboard
+# desplegado (Streamlit Community Cloud) pueda predecir sin depender de una
+# máquina local con los notebooks ya corridos.
+!models/modelos_intra_cohorte.joblib
 
 # --- Entorno ---
 .venv/
