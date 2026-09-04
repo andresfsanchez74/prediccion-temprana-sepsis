@@ -4,6 +4,7 @@
 **Profesor:** Jesús Antonio Villarraga P.
 **Autores:** Daniel Forero, Cristian Manuel Castañeda Gutiérrez
 **Metodología:** CRISP-DM
+**Demo en vivo:** [prediccion-temprana-sepsis.streamlit.app](https://prediccion-temprana-sepsis-cdxm6wziooag2muq9jreax.streamlit.app/)
 
 ---
 
