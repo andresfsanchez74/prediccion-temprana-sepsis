@@ -656,7 +656,22 @@
     </div>
   </section>
 
-  <!-- 23 · TECHO BAJO -->
+  <!-- 23 · DEPENDENCIA SHAP ICULOS/FIO2 -->
+  <section class="slide">
+    <p class="eyebrow"><span class="n">7</span> Interpretación de resultados</p>
+    <h2>Por qué ICULOS es la variable que más pesa</h2>
+    <p class="lede" style="margin-top:6px">Muestran cómo cambia el efecto de una variable según su propio valor — no solo cuánto pesa en promedio.</p>
+    <div class="img-only wide" style="margin-top:12px">
+      <div class="figure-frame">
+        <img src="../reports/figures/08_shap_dependencia_iculos_fio2.png" alt="Dependencia SHAP de ICULOS y FiO2_ult" style="max-height:30vh">
+      </div>
+    </div>
+    <div class="insight" style="max-width:none; margin-top:14px;">
+      <p><strong>ICULOS</strong> salta de negativo a una meseta alta hacia la hora 50 — casi un interruptor. Pesa tanto porque nunca falta y porque "llevar tiempo aquí" sí anticipa riesgo real — pero por eso mismo no viaja bien entre hospitales: depende de cada centro, no del paciente. <strong>FiO2_ult</strong>, la única fisiológica del top-4, sube gradual y con sentido clínico directo.</p>
+    </div>
+  </section>
+
+  <!-- 24 · TECHO BAJO -->
   <section class="slide">
     <p class="eyebrow"><span class="n">7</span> Interpretación de resultados</p>
     <h2>Por qué el techo de este problema es bajo</h2>
@@ -673,7 +688,7 @@
     </div>
   </section>
 
-  <!-- 24 · PUENTE DEMO -->
+  <!-- 25 · PUENTE DEMO -->
   <section class="slide bridge">
     <p class="kicker">Demostración en vivo</p>
     <h2>Vamos a verlo funcionar</h2>
@@ -685,7 +700,7 @@
     <div class="bridge-url">streamlit run app/Inicio.py</div>
   </section>
 
-  <!-- 25 · CONCLUSIONES Y DECISIONES -->
+  <!-- 26 · CONCLUSIONES Y DECISIONES -->
   <section class="slide">
     <p class="eyebrow"><span class="n">8</span> Conclusiones y decisiones</p>
     <h2>Qué aprendimos y qué recomendamos</h2>
@@ -701,7 +716,7 @@
     </div>
   </section>
 
-  <!-- 26 · CIERRE -->
+  <!-- 27 · CIERRE -->
   <section class="slide closing">
     <p class="big-line">45 horas de anticipación no son un modelo perfecto —<br>son <span class="accent">tiempo real de reacción</span> que hoy no existe en la práctica clínica estándar.</p>
     <p class="thanks">Gracias</p>
