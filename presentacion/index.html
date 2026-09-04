@@ -659,15 +659,18 @@
   <!-- 23 · DEPENDENCIA SHAP ICULOS/FIO2 -->
   <section class="slide">
     <p class="eyebrow"><span class="n">7</span> Interpretación de resultados</p>
-    <h2>Por qué ICULOS es la variable que más pesa</h2>
-    <p class="lede" style="margin-top:6px">Muestran cómo cambia el efecto de una variable según su propio valor — no solo cuánto pesa en promedio.</p>
-    <div class="img-only wide" style="margin-top:12px">
+    <h2 style="max-width:40ch">Por qué ICULOS es la variable que más pesa</h2>
+    <p class="lede" style="margin-top:6px">A la izquierda, el ranking completo; a la derecha, el detalle de cómo actúan las dos variables que más pesan.</p>
+    <div class="two-col" style="grid-template-columns: 1fr 2fr; margin-top:10px; align-items:center;">
       <div class="figure-frame">
-        <img src="../reports/figures/08_shap_dependencia_iculos_fio2.png" alt="Dependencia SHAP de ICULOS y FiO2_ult" style="max-height:30vh">
+        <img src="../reports/figures/08_shap_beeswarm.png" alt="Beeswarm SHAP: cómo mueve cada variable el riesgo, fila por fila" style="max-height:42vh; width:auto; margin:0 auto;">
+      </div>
+      <div class="figure-frame">
+        <img src="../reports/figures/08_shap_dependencia_iculos_fio2.png" alt="Dependencia SHAP de ICULOS y FiO2_ult" style="max-height:42vh; width:auto; margin:0 auto;">
       </div>
     </div>
-    <div class="insight" style="max-width:none; margin-top:14px;">
-      <p><strong>ICULOS</strong> salta de negativo a una meseta alta hacia la hora 50 — casi un interruptor. Pesa tanto porque nunca falta y porque "llevar tiempo aquí" sí anticipa riesgo real — pero por eso mismo no viaja bien entre hospitales: depende de cada centro, no del paciente. <strong>FiO2_ult</strong>, la única fisiológica del top-4, sube gradual y con sentido clínico directo.</p>
+    <div class="insight" style="max-width:none; margin-top:10px;">
+      <p><strong>ICULOS</strong> salta de negativo a una meseta alta hacia la hora 50 — casi un interruptor. Pesa tanto porque nunca falta y porque "llevar tiempo aquí" sí anticipa riesgo real — pero por eso mismo no viaja bien entre hospitales.</p>
     </div>
   </section>
 
